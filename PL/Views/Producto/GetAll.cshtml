@@ -1,0 +1,64 @@
+﻿@model ML.Producto
+@{
+    ViewBag.Title = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Producto</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>Seleciona un producto o presiona + para agregar uno nuevo</h5>
+        <hr />
+    </div>
+</div>
+
+<div style="float:right;">
+    @Html.ActionLink("+", "Form", "Producto", htmlAttributes: new { @class = "btn btn-success" })
+</div>
+
+<br>
+
+    <table class="table table-bordered table-responsive">
+        <thead>
+            <tr>
+                <td>Editar</td>
+                <td class="hidden">IdProducto</td>
+                <td>Nombre del producto</td>
+                <td>Precio Unitario</td>
+                <td>Stock</td>
+                <td>Descripción</td>
+                <td>Imagen</td>
+                <td>Departamento</td>
+                <td>Nombre Proveedor</td>
+                <td>Eliminar</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ML.Producto producto in Model.Productos)
+            {
+                <tr>
+                    <td><a class="btn btn-warning glyphicon glyphicon-edit" href="@Url.Action("Form","Producto", new {IdProducto = producto.IdProducto})"></a></td>
+                    <td class="hidden">@producto.IdProducto</td>
+                    <td>@producto.Nombre</td>
+                    <td>@producto.PrecioUnitario</td>
+                    <td>@producto.Stock</td>
+                    <td>@producto.Descripcion</td>
+                    <td>
+                    @if (producto.Imagen != null)
+                    {
+                    <img id="Img" src="data:image/*;base64,@producto.Imagen" style="width:auto ; height:100px" />
+                    }
+                    else
+                    {
+                    <img id="Img" src="~/images/Image.jpg" style="width:auto ; height:100px" />
+                    }
+                     </td>
+                    <td>@producto.Departamento.Nombre</td>
+                    <td>@producto.Proveedor.Nombre</td>
+                    <td><a class="btn btn-danger glyphicon glyphicon-trash" href="@Url.Action("Delete","Producto", new {IdProducto = producto.IdProducto})" onclick="return confirm('¿Seguro que deseas eliminar este producto?');"></a></td>
+
+                </tr>
+            }
+        </tbody>
+    </table>

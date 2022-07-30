@@ -1,0 +1,73 @@
+﻿@model ML.Usuario
+@{
+    ViewBag.Title = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Usuario</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>"Seleccione un usuario o + para agregar uno nuevo"</h5>
+        <hr />
+    </div>
+</div>
+
+<div style="float:right;">
+    @Html.ActionLink("+", "Form", "Usuario", htmlAttributes: new { @class = "btn btn-success" })
+</div>
+
+<br>
+    <table class ="table table-bordered table-responsive">
+        <thead>
+            <tr>
+                <td>Editar</td>
+                <td class="hidden">IdUsuario</td>
+                <td>NombreUsuario</td>
+                <td>Telefono</td>
+                <td>UserName</td>
+                <td>Email</td>
+                <td class="hidden">Password</td>
+                <td>FechaNacimiento</td>
+                <td>Sexo</td>
+                <td>Celular</td>
+                <td>CURP</td>
+                <td>Imagen</td>
+                <td>NombreRol</td>
+                <td>Direccion</td>
+                <td>Eliminar</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ML.Usuario usuario in Model.Usuarios)
+            {
+            <tr>
+                <td><a class="btn btn-warning glyphicon glyphicon-edit" href="@Url.Action("Form", "Usuario", new { IdUsuario = usuario.IdUsuario })"></a></td>
+                <td class="hidden">@usuario.IdUsuario</td>
+                <td>@usuario.Nombre @usuario.ApellidoPaterno @usuario.ApellidoMaterno</td>
+                <td>@usuario.Telefono</td>
+                <td>@usuario.UserName</td>
+                <td>@usuario.Email</td>
+                <td class="hidden">@usuario.Password</td>
+                <td>@usuario.FechaNacimiento</td>
+                <td>@usuario.Sexo</td>
+                <td>@usuario.Celular</td>
+                <td>@usuario.CURP</td>
+                  <td>
+                    @if (usuario.Imagen != null)
+                    {
+                    <img id="Img" src="data:image/*;base64,@usuario.Imagen" style="width:auto ; height:100px" />
+                    }
+                    else
+                    {
+                    <img id="Img" src="~/images/ImageUsuario.jpg" style="width:auto ; height:100px" />
+                    }
+                     </td>
+                <td>@usuario.Rol.Nombre</td>
+                <td>@usuario.Direccion.Colonia.Municipio.Estado.Pais.Nombre, @usuario.Direccion.Colonia.Municipio.Estado.Nombre, @usuario.Direccion.Colonia.Municipio.Nombre, @usuario.Direccion.Colonia.Nombre, @usuario.Direccion.Calle, @usuario.Direccion.NumeroInterior, @usuario.Direccion.NumeroExterior</td>
+
+                <td><a class="btn btn-danger glyphicon glyphicon-trash" href="@Url.Action("Delete", "Usuario", new { IdUsuario= usuario.IdUsuario})" onclick="return confirm('¿Seguro que deseas eliminar este registro?');"></a></td>
+            </tr>
+            }
+        </tbody>
+    </table>
