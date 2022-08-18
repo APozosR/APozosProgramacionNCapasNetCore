@@ -1,14 +1,72 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿    using Microsoft.AspNetCore.Mvc;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace PL.Controllers
 {
     public class UsuarioController : Controller
     {
+        private readonly IConfiguration _configuration;
+        private readonly IHostingEnvironment _hostingEnvironment;
+
+        public UsuarioController(IConfiguration configuration, IHostingEnvironment HostingEnvironment)
+        {
+            _configuration = configuration;
+            _hostingEnvironment = HostingEnvironment;
+        }
+
         [HttpGet]
         public ActionResult GetAll()
         {
             ML.Usuario usuario = new ML.Usuario();
-            ML.Result result = BL.Usuario.GetAll();
+            ML.Result resultApi = new ML.Result();
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_configuration["Webapi"]);
+
+                var responseTask = client.GetAsync("api/Usuario/GetAll");
+                responseTask.Wait();
+  
+                var result = responseTask.Result;
+
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<ML.Result>();
+                    readTask.Wait();
+
+                    resultApi.Objects = new List<object>();
+
+                    foreach (var resultItem in readTask.Result.Objects)
+                    {
+                        ML.Usuario resultUsuario = Newtonsoft.Json.JsonConvert.DeserializeObject<ML.Usuario>(resultItem.ToString());
+                        resultApi.Objects.Add(resultUsuario);
+                    }
+                }
+            }
+            usuario.Usuarios = resultApi.Objects;
+            //usuario.Nombre = (usuario.Nombre == null) ? "" : usuario.Nombre;
+            //usuario.ApellidoPaterno = (usuario.ApellidoPaterno == null) ? "" : usuario.ApellidoPaterno;
+            //usuario.ApellidoMaterno = (usuario.ApellidoMaterno == null) ? "" : usuario.ApellidoMaterno;
+            //ML.Result result = BL.Usuario.GetAll(usuario);
+
+            //if (result.Correct)
+            //{
+            //    usuario.Usuarios = result.Objects;
+            //}
+            //else
+            //{
+            //    result.Correct = false;
+            //}
+            return View(usuario);
+        }
+
+        [HttpPost]
+        public ActionResult GetAll(ML.Usuario usuario)
+        {
+            usuario.Nombre = (usuario.Nombre == null) ? "" : usuario.Nombre;
+            usuario.ApellidoPaterno = (usuario.ApellidoPaterno == null) ? "" : usuario.ApellidoPaterno;
+            usuario.ApellidoMaterno = (usuario.ApellidoMaterno == null) ? "" : usuario.ApellidoMaterno;
+            ML.Result result =  BL.Usuario.GetAll(usuario);
 
             if (result.Correct)
             {
@@ -49,85 +107,226 @@ namespace PL.Controllers
                 }
                 else //UPDATE
                 {
-                    ML.Result result = BL.Usuario.GetById(IdUsuario.Value);
-                    if (result.Correct)
+                    ML.Result resultApi = new ML.Result();
+                    using (var client = new HttpClient())
                     {
-                        usuario = (ML.Usuario)result.Object; //Unboxing
-                        usuario.Rol = new ML.Rol();
-                        usuario.Rol.Roles = resultRol.Objects;
+                        client.BaseAddress = new Uri(_configuration["WebApi"]);
 
-                        ML.Result resultEstado = BL.Estado.GetByIdPais(IdUsuario.Value);
-                        ML.Result resultMunicipio = BL.Municipio.GetByIdEstado(IdUsuario.Value);
-                        ML.Result resultColonia = BL.Colonia.GetByIdMunicipio(IdUsuario.Value);
+                        var responseTask = client.GetAsync("api/Usuario/GetById/?IdUsuario=" + IdUsuario);
+                        responseTask.Wait();
+
+                        var result = responseTask.Result;
+                        if (result.IsSuccessStatusCode)
+                        {
+                            var readTask = result.Content.ReadAsAsync<ML.Result>();
+                            readTask.Wait();
+
+                            var resultItem = readTask.Result.Object;
+                            ML.Usuario resultUsuario = Newtonsoft.Json.JsonConvert.DeserializeObject<ML.Usuario>(resultItem.ToString());
+                            resultApi.Object = resultUsuario;
+                        }
+                        else
+                        {
+                            ViewBag.Mensaje = "Error al mostrar los datos";
+                            return View("modal");
+                        }
+
+                        usuario = (ML.Usuario)resultApi.Object; //Unboxing
+                        usuario.Rol = new ML.Rol();
+                        ML.Result resultRoles = BL.Rol.RolGetAll();
+                        ML.Result resultEstado = BL.Estado.GetByIdPais(usuario.Direccion.Colonia.Municipio.Estado.IdEstado);
+                        ML.Result resultMunicipio = BL.Municipio.GetByIdEstado(usuario.Direccion.Colonia.Municipio.IdMunicipio);
+                        ML.Result resultColonia = BL.Colonia.GetByIdMunicipio(usuario.Direccion.Colonia.IdColonia);
+                        usuario.Rol.Roles = resultRoles.Objects;
                         usuario.Direccion.Colonia.Municipio.Estado.Pais.Paises = resultPais.Objects;
                         usuario.Direccion.Colonia.Municipio.Estado.Estados = resultEstado.Objects;
                         usuario.Direccion.Colonia.Municipio.Municipios = resultMunicipio.Objects;
                         usuario.Direccion.Colonia.Colonias = resultColonia.Objects;
-                    }
-                    else
-                    {
-                        ViewBag.Mensaje = "Error al mostrar los datos";
-                        return View("modal");
+
                     }
                 }
             }
             return View(usuario);
+            //ML.Result result = BL.Usuario.GetById(IdUsuario.Value);
+            //        if (result.Correct)
+            //        {
+            //            usuario = (ML.Usuario)result.Object; //Unboxing
+            //            usuario.Rol = new ML.Rol();
+            //            ML.Result resultRoles = BL.Rol.RolGetAll();
+            //            ML.Result resultEstado = BL.Estado.GetByIdPais(usuario.Direccion.Colonia.Municipio.Estado.IdEstado);
+            //            ML.Result resultMunicipio = BL.Municipio.GetByIdEstado(usuario.Direccion.Colonia.Municipio.IdMunicipio);
+            //            ML.Result resultColonia = BL.Colonia.GetByIdMunicipio(usuario.Direccion.Colonia.IdColonia);
+            //            usuario.Rol.Roles = resultRoles.Objects;
+            //            usuario.Direccion.Colonia.Municipio.Estado.Pais.Paises = resultPais.Objects;
+            //            usuario.Direccion.Colonia.Municipio.Estado.Estados = resultEstado.Objects;
+            //            usuario.Direccion.Colonia.Municipio.Municipios = resultMunicipio.Objects;
+            //            usuario.Direccion.Colonia.Colonias = resultColonia.Objects;
+            //        }
+            //        else
+            //        {
+            //            ViewBag.Mensaje = "Error al mostrar los datos";
+            //            return View("modal");
+            //        }
+            //    }
+            //}
+            //return View(usuario);
         }
+
 
         [HttpPost]
         public ActionResult Form(ML.Usuario usuario)
         {
-            IFormFile imagen = Request.Form.Files["fuImage"];
-            if (imagen != null)
+            if (ModelState.IsValid)
             {
-                byte[] ImagenByte = ConvertToBytes(imagen);
-                usuario.Imagen = Convert.ToBase64String(ImagenByte);
-            }
+                IFormFile imagen = Request.Form.Files["fuImage"];
+                if (imagen != null)
+                {
+                    byte[] ImagenByte = ConvertToBytes(imagen);
+                    usuario.Imagen = Convert.ToBase64String(ImagenByte);
+                }
 
-            if (usuario.IdUsuario == 0)
-            {
-                ML.Result result = BL.Usuario.Add(usuario);
+                if (usuario.IdUsuario == 0)
+                {
+                    using (var client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(_configuration["WebApi"]);
 
-                if (result.Correct)
-                {
-                    ViewBag.Mensaje = "Registrado exitosamente";
-                }
-                else
-                {
-                    ViewBag.Mensaje = "Error al realizar el registro";
-                }
-                return View("Modal");
-            }
-            else
-            {
-                ML.Result result = BL.Usuario.Update(usuario);
+                        var postTask = client.PostAsJsonAsync<ML.Usuario>("api/Usuario/Add", usuario);
+                        postTask.Wait();
 
-                if (result.Correct)
-                {
-                    ViewBag.Mensaje = "Registro actualizado correctamente";
+                        var resultService = postTask.Result;
+
+                        if (resultService.IsSuccessStatusCode)
+                        {
+                            ViewBag.Mensaje = "Registrado exitósamente";
+                            return View("Modal");
+                        }
+                        else
+                        {
+                            ViewBag.Mensaje = "Error al realizar el registro";
+                            return View("Modal");
+                        }
+                    }
+
+                    //ML.Result result = BL.Usuario.Add(usuario);
+
+                    //if (result.Correct)
+                    //{
+                    //    ViewBag.Mensaje = "Registrado exitosamente";
+                    //}
+                    //else
+                    //{
+                    //    ViewBag.Mensaje = "Error al realizar el registro";
+                    //}
+                    //return View("Modal");
                 }
-                else
+                else //Update
                 {
-                    ViewBag.Mensaje = "No se pudo actualzar el registro";
+                    using (var client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(_configuration["WebApi"]);
+
+                        var patchTask = client.PutAsJsonAsync<ML.Usuario>("api/Usuario/Update", usuario);
+                        patchTask.Wait();
+
+                        var resultService = patchTask.Result;
+
+                        if(resultService.IsSuccessStatusCode)
+                        {
+                            ViewBag.Mensaje = "Actualizado correctamente";
+                            return View("Modal");
+                        }
+                        else
+                        {
+                            ViewBag.Mensaje = "Error al actualizar el registro";
+                            return View("Modal");
+                        }
+                    }
+
+                    //ML.Result result = BL.Usuario.Update(usuario);
+
+                    //if (result.Correct)
+                    //{
+                    //    ViewBag.Mensaje = "Registro actualizado correctamente";
+                    //}
+                    //else
+                    //{
+                    //    ViewBag.Mensaje = "No se pudo actualzar el registro";
+                    //}
+                    //return View("modal");
                 }
-                return View("modal");
+                
             }
+            ML.Result resultRol = BL.Rol.RolGetAll();
+            ML.Result resultPais = BL.Pais.GetAll();
+            ML.Result resultEstado = BL.Estado.GetByIdPais(usuario.Direccion.Colonia.Municipio.Estado.IdEstado);
+            ML.Result resultMunicipio = BL.Municipio.GetByIdEstado(usuario.Direccion.Colonia.Municipio.IdMunicipio);
+            ML.Result resultColonia = BL.Colonia.GetByIdMunicipio(usuario.Direccion.Colonia.IdColonia);
+            usuario.Rol.Roles = resultRol.Objects;
+            usuario.Direccion.Colonia.Municipio.Estado.Pais.Paises = resultPais.Objects;
+            usuario.Direccion.Colonia.Municipio.Estado.Estados = resultEstado.Objects;
+            usuario.Direccion.Colonia.Municipio.Municipios = resultMunicipio.Objects;
+            usuario.Direccion.Colonia.Colonias = resultColonia.Objects;
+            return View(usuario);
 
         }
 
-        [HttpGet]
-        public ActionResult Delete(ML.Usuario usuario)
+        public ActionResult UpdateStatus(int IdUsuario)
         {
-            ML.Result result = BL.Usuario.Delete(usuario);
+            ML.Usuario usuario = new ML.Usuario();
+            ML.Result result = BL.Usuario.GetById(IdUsuario);
 
             if (result.Correct)
             {
-                ViewBag.Mensaje = "Usuario borrado correctamente";
-            }
-            else
+                usuario = (ML.Usuario)result.Object;
+
+                usuario.Status = usuario.Status ? false : true;
+
+                ML.Result resultUpdate = BL.Usuario.Update(usuario);
+
+                if (resultUpdate.Correct)
+                {
+                    ViewBag.Mensaje = "Status actualizado";
+                }
+                else
+                {
+                    ViewBag.Mensaje = "Error al actualizar el status";
+                }
+            } 
+            return View("Modal");
+        }
+
+        [HttpGet]
+        public ActionResult Delete(int IdUsuario)
+        {
+            using (var client = new HttpClient())
             {
-                ViewBag.Mensaje = "Error al eliminar el usuario";
+                client.BaseAddress = new Uri(_configuration["WebApi"]);
+                var deleteTask = client.DeleteAsync("api/Usuario/Delete/?IdUsuario=" + IdUsuario);
+                deleteTask.Wait();
+
+                var resultService = deleteTask.Result;
+
+                if (resultService.IsSuccessStatusCode)
+                {
+                    ViewBag.Mensaje = "Borrado exitósamente";
+                }
+                else
+                {
+                    ViewBag.Mensaje = "Error al borrar registro";
+                }
             }
+            
+            //ML.Result result = BL.Usuario.Delete(usuario);
+
+            //if (result.Correct)
+            //{
+            //    ViewBag.Mensaje = "Usuario borrado correctamente";
+            //}
+            //else
+            //{
+            //    ViewBag.Mensaje = "Error al eliminar el usuario";
+            //}
             return View("modal");
         }
 

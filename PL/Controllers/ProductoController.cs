@@ -8,7 +8,18 @@ namespace PL_MVC.Controllers
         public ActionResult GetAll()
         {
             ML.Producto producto = new ML.Producto();
-            ML.Result result = BL.Producto.GetAll();
+            producto.Departamento = new ML.Departamento();
+            producto.Departamento.Area = new ML.Area();
+
+            ML.Result resultArea = BL.Area.GetAllArea();
+            //ML.Result resultDepartamento = BL.Departamento.GetByIdArea();
+            producto.Departamento.Area.Areas = resultArea.Objects;
+            //producto.Departamento.Departamentos = resultDepartamento.Objects;
+            
+        
+            producto.Nombre = (producto.Nombre == null) ? "" : producto.Nombre;
+
+            ML.Result result = BL.Producto.GetAll(producto);
 
             if (result.Correct)
             {
@@ -21,14 +32,30 @@ namespace PL_MVC.Controllers
             return View(producto);
         }
 
-        [HttpGet]
+        [HttpPost]
+        public ActionResult GetAll(ML.Producto producto)
+        {
+            producto.Nombre = (producto.Nombre == null) ? "" : producto.Nombre;
 
+            ML.Result result = BL.Producto.GetAll(producto);
+            if (result.Correct)
+            {
+                producto.Productos = result.Objects;
+            }
+            else
+            {
+                result.Correct = false;
+            }
+            return View(producto);
+        }
+
+        [HttpGet]
         public ActionResult Form(int? IdProducto)
         {
             ML.Producto producto = new ML.Producto();
             producto.Proveedor = new ML.Proveedor();
             producto.Departamento = new ML.Departamento();
-
+                
             ML.Result resultProveedor = BL.Proveedor.GetAllProveedor();
             ML.Result resultDepartamento = BL.Departamento.GetAllDepartamento();
 
@@ -62,6 +89,7 @@ namespace PL_MVC.Controllers
                     {
                         ViewBag.Mensaje = "Error al mostrar los datos";
                     }
+                    return View("Modal");
                 }
             }
             return View(producto);
@@ -127,6 +155,12 @@ namespace PL_MVC.Controllers
             fileStream.Read(bytes, 0, (int)fileStream.Length);
 
             return bytes;
+        }
+
+        public JsonResult DepartamentoGetByIdArea(int IdArea)
+        {
+            ML.Result result = BL.Departamento.GetByIdArea(IdArea);
+            return Json(result.Objects);
         }
     }
 }

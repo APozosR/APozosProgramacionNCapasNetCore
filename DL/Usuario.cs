@@ -8,6 +8,7 @@ namespace DL
         public Usuario()
         {
             Direccions = new HashSet<Direccion>();
+            Venta = new HashSet<Ventum>();
         }
 
         public int IdUsuario { get; set; }
@@ -22,11 +23,13 @@ namespace DL
         public DateTime FechaNacimiento { get; set; }
         public string Sexo { get; set; } = null!;
         public string? Celular { get; set; }
-        public string? CURP { get; set; }
+        public string? Curp { get; set; }
         public string? Imagen { get; set; }
+        public bool Status { get; set; }
 
         public virtual Rol? IdRolNavigation { get; set; }
         public virtual ICollection<Direccion> Direccions { get; set; }
+        public virtual ICollection<Ventum> Venta { get; set; }
 
         //Alias
         public string NombreRol { get; set; }
@@ -35,7 +38,7 @@ namespace DL
         public string NombreEstado { get; set; }
         public string NombrePais { get; set; }
 
-        //
+        // SP
         public int IdDireccion { get; set; }
         public string Calle { get; set; }
         public string NumeroInterior { get; set; }

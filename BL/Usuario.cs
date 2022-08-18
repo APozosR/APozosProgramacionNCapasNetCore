@@ -7,11 +7,12 @@ namespace BL
         public static ML.Result Add(ML.Usuario usuario)
         {
             ML.Result result = new ML.Result();
+
             try
             {
                 using (DL.APozosProgramacionNCapasContext context = new DL.APozosProgramacionNCapasContext())
                 {
-                    var query = context.Database.ExecuteSqlRaw($"UsuarioAdd {usuario.Nombre},'{ usuario.ApellidoPaterno}','{usuario.ApellidoMaterno}','{usuario.Telefono}','{usuario.Rol.IdRol}','{usuario.UserName}','{usuario.Email}','{usuario.Password}','{usuario.FechaNacimiento}','{usuario.Sexo}','{usuario.Celular}','{usuario.CURP}','{usuario.Imagen}','{usuario.Direccion.Calle}','{usuario.Direccion.NumeroInterior}','{usuario.Direccion.NumeroExterior}','{usuario.Direccion.Colonia.IdColonia}'");
+                    var query = context.Database.ExecuteSqlRaw($"UsuarioAdd {usuario.Nombre},'{ usuario.ApellidoPaterno}','{usuario.ApellidoMaterno}','{usuario.Telefono}','{usuario.Rol.IdRol}','{usuario.UserName}','{usuario.Email}','{usuario.Password}','{usuario.FechaNacimiento}','{usuario.Sexo}','{usuario.Celular}','{usuario.CURP}','{usuario.Imagen}',{usuario.Status = true},'{usuario.Direccion.Calle}','{usuario.Direccion.NumeroInterior}','{usuario.Direccion.NumeroExterior}','{usuario.Direccion.Colonia.IdColonia}'");
 
                     if (query > 0)
                     {
@@ -38,7 +39,7 @@ namespace BL
             {
                 using (DL.APozosProgramacionNCapasContext context = new DL.APozosProgramacionNCapasContext())
                 {
-                    var query = context.Database.ExecuteSqlRaw($"UsuarioUpdate {usuario.IdUsuario},'{usuario.Nombre}','{ usuario.ApellidoPaterno}','{usuario.ApellidoMaterno}','{usuario.Telefono}','{usuario.Rol.IdRol}','{usuario.UserName}','{usuario.Email}','{usuario.Password}','{usuario.FechaNacimiento}','{usuario.Sexo}','{usuario.Celular}','{usuario.CURP}','{usuario.Imagen}','{usuario.Direccion.Calle}','{usuario.Direccion.NumeroInterior}','{usuario.Direccion.NumeroExterior}','{usuario.Direccion.Colonia.IdColonia}'");
+                    var query = context.Database.ExecuteSqlRaw($"UsuarioUpdate {usuario.IdUsuario},'{usuario.Nombre}','{ usuario.ApellidoPaterno}','{usuario.ApellidoMaterno}','{usuario.Telefono}','{usuario.Rol.IdRol}','{usuario.UserName}','{usuario.Email}','{usuario.Password}','{usuario.FechaNacimiento}','{usuario.Sexo}','{usuario.Celular}','{usuario.CURP}','{usuario.Imagen}',{usuario.Status},'{usuario.Direccion.Calle}','{usuario.Direccion.NumeroInterior}','{usuario.Direccion.NumeroExterior}','{usuario.Direccion.Colonia.IdColonia}'");
 
                     if (query > 0)
                     {
@@ -58,14 +59,14 @@ namespace BL
             return result;
         }
 
-        public static ML.Result Delete(ML.Usuario usuario)
+        public static ML.Result Delete(int IdUsuario)
         {
             ML.Result result = new ML.Result();
             try
             {
                 using (DL.APozosProgramacionNCapasContext context = new DL.APozosProgramacionNCapasContext())
                 {
-                    var query = context.Database.ExecuteSqlRaw($"UsuarioDelete '{usuario.IdUsuario}'");
+                    var query = context.Database.ExecuteSqlRaw($"UsuarioDelete '{IdUsuario}'");
 
                     if (query > 0)
                     {
@@ -84,14 +85,14 @@ namespace BL
             }
             return result;
         }
-        public static ML.Result GetAll()
+        public static ML.Result GetAll(ML.Usuario usuarioBusqueda)
         {
             ML.Result result = new ML.Result();
             try
             {
                 using (DL.APozosProgramacionNCapasContext context = new DL.APozosProgramacionNCapasContext())
                 {
-                    var query = context.Usuarios.FromSqlRaw($"UsuarioGetAll").ToList();
+                    var query = context.Usuarios.FromSqlRaw($"UsuarioGetAll '{usuarioBusqueda.Nombre}','{usuarioBusqueda.ApellidoPaterno}','{usuarioBusqueda.ApellidoMaterno}'").ToList();
                     result.Objects = new List<object>();
                     if (query != null)
                     {
@@ -112,11 +113,12 @@ namespace BL
                             usuario.UserName = obj.UserName;
                             usuario.Email = obj.Email;
                             usuario.Password = obj.Password;
-                            usuario.FechaNacimiento = obj.FechaNacimiento.ToString();
+                            usuario.FechaNacimiento = obj.FechaNacimiento.ToString("dd-MM-yyyy");
                             usuario.Sexo = obj.Sexo;
                             usuario.Celular = obj.Celular;
-                            usuario.CURP = obj.CURP;
+                            usuario.CURP = obj.Curp;
                             usuario.Imagen = obj.Imagen;
+                            usuario.Status = obj.Status;
 
                             usuario.Direccion = new ML.Direccion();
                             usuario.Direccion.IdDireccion = obj.IdDireccion;
@@ -186,11 +188,12 @@ namespace BL
                         usuario.UserName = obj.UserName;
                         usuario.Email = obj.Email;
                         usuario.Password = obj.Password;
-                        usuario.FechaNacimiento = obj.FechaNacimiento.ToString();
+                        usuario.FechaNacimiento = obj.FechaNacimiento.ToString("dd-MM-yyyy");
                         usuario.Sexo = obj.Sexo;
                         usuario.Celular = obj.Celular;
-                        usuario.CURP = obj.CURP;
+                        usuario.CURP = obj.Curp;
                         usuario.Imagen = obj.Imagen;
+                        usuario.Status = obj.Status;
 
                         usuario.Direccion = new ML.Direccion();
                         usuario.Direccion.IdDireccion = obj.IdDireccion;

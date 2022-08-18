@@ -21,19 +21,22 @@ namespace DL
         public virtual DbSet<Departamento> Departamentos { get; set; } = null!;
         public virtual DbSet<Direccion> Direccions { get; set; } = null!;
         public virtual DbSet<Estado> Estados { get; set; } = null!;
+        public virtual DbSet<MetodoPago> MetodoPagos { get; set; } = null!;
         public virtual DbSet<Municipio> Municipios { get; set; } = null!;
         public virtual DbSet<Pai> Pais { get; set; } = null!;
         public virtual DbSet<Producto> Productos { get; set; } = null!;
         public virtual DbSet<Proveedor> Proveedors { get; set; } = null!;
         public virtual DbSet<Rol> Rols { get; set; } = null!;
         public virtual DbSet<Usuario> Usuarios { get; set; } = null!;
+        public virtual DbSet<VentaProducto> VentaProductos { get; set; } = null!;
+        public virtual DbSet<Ventum> Venta { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=LAPTOP-MHJJSESL; Database= APozosProgramacionNCapas;\nTrusted_Connection=True; User ID=sa; Password=pass@word1;");
+                optionsBuilder.UseSqlServer("Server=LAPTOP-MHJJSESL; Database= APozosProgramacionNCapas; Trusted_Connection=True; User ID=sa; Password=pass@word1;");
             }
         }
 
@@ -136,6 +139,18 @@ namespace DL
                     .HasConstraintName("FK__Estado__IdPais__3C69FB99");
             });
 
+            modelBuilder.Entity<MetodoPago>(entity =>
+            {
+                entity.HasKey(e => e.IdMetodoPago)
+                    .HasName("PK__MetodoPa__6F49A9BEB7F0D001");
+
+                entity.ToTable("MetodoPago");
+
+                entity.Property(e => e.Metodo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Municipio>(entity =>
             {
                 entity.HasKey(e => e.IdMunicipio)
@@ -173,6 +188,8 @@ namespace DL
                 entity.Property(e => e.Descripcion)
                     .HasMaxLength(500)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Imagen).IsUnicode(false);
 
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(200)
@@ -246,7 +263,7 @@ namespace DL
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
-                entity.Property(e => e.CURP)
+                entity.Property(e => e.Curp)
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("CURP");
@@ -256,6 +273,8 @@ namespace DL
                     .IsUnicode(false);
 
                 entity.Property(e => e.FechaNacimiento).HasColumnType("date");
+
+                entity.Property(e => e.Imagen).IsUnicode(false);
 
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(50)
@@ -282,6 +301,44 @@ namespace DL
                     .WithMany(p => p.Usuarios)
                     .HasForeignKey(d => d.IdRol)
                     .HasConstraintName("FK__Usuario__IdRol__1920BF5C");
+            });
+
+            modelBuilder.Entity<VentaProducto>(entity =>
+            {
+                entity.HasKey(e => e.IdVentaProducto)
+                    .HasName("PK__VentaPro__E4CB50998B47C4B2");
+
+                entity.ToTable("VentaProducto");
+
+                entity.HasOne(d => d.IdProductoNavigation)
+                    .WithMany(p => p.VentaProductos)
+                    .HasForeignKey(d => d.IdProducto)
+                    .HasConstraintName("FK__VentaProd__IdPro__76969D2E");
+
+                entity.HasOne(d => d.IdVentaNavigation)
+                    .WithMany(p => p.VentaProductos)
+                    .HasForeignKey(d => d.IdVenta)
+                    .HasConstraintName("FK__VentaProd__IdVen__75A278F5");
+            });
+
+            modelBuilder.Entity<Ventum>(entity =>
+            {
+                entity.HasKey(e => e.IdVenta)
+                    .HasName("PK__Venta__BC1240BD7805318C");
+
+                entity.Property(e => e.Fecha).HasColumnType("date");
+
+                entity.Property(e => e.Total).HasColumnType("decimal(18, 2)");
+
+                entity.HasOne(d => d.IdMetodoPagoNavigation)
+                    .WithMany(p => p.Venta)
+                    .HasForeignKey(d => d.IdMetodoPago)
+                    .HasConstraintName("FK__Venta__IdMetodoP__72C60C4A");
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.Venta)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("FK__Venta__IdUsuario__71D1E811");
             });
 
             OnModelCreatingPartial(modelBuilder);

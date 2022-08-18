@@ -42,32 +42,36 @@
             <div class="col">
                 <div class="col-md-4 col-12 col-sm-6">
                     @Html.LabelFor(model => model.Nombre)
-                    @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", id = "txtnombre" })
+                    @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", id = "txtnombre", @onkeypress ="return SoloLetras(event, 'lblErrorNombre')" })
                     @Html.ValidationMessageFor(model => model.Nombre)
+                    <label id ="lblErrorNombre"></label>
                 </div>
             </div>
 
             <div class="col">
                 <div class="col-md-4 col-12 col-sm-6">
                     @Html.LabelFor(model => model.ApellidoPaterno)
-                    @Html.TextBoxFor(model => model.ApellidoPaterno, new { @class = "form-control", id = "txtApellidoPaterno" })
+                    @Html.TextBoxFor(model => model.ApellidoPaterno, new { @class = "form-control", id = "txtApellidoPaterno", @onkeypress ="return SoloLetras (event, 'lblErrorApellidoPaterno')" })
                     @Html.ValidationMessageFor(model => model.ApellidoPaterno)
+                    <label id ="lblErrorApellidoPaterno"></label>
                 </div>
             </div>
 
             <div class="col">
                 <div class="col-md-4 col-12 col-sm-6">
                     @Html.LabelFor(model => model.ApellidoMaterno)
-                    @Html.TextBoxFor(model => model.ApellidoMaterno, new { @class = "form-control", id = "txtApellidoMaterno" })
+                    @Html.TextBoxFor(model => model.ApellidoMaterno, new { @class = "form-control", id = "txtApellidoMaterno", @onkeypress ="return SoloLetras(event, 'lblErrorApellidoMaterno')" })
                     @Html.ValidationMessageFor(model => model.ApellidoMaterno)
+                    <label id = "lblErrorApellidoMaterno"></label>
                 </div>
             </div>
 
             <div class="col">
                 <div class="col-md-4 col-12 col-sm-6">
                     @Html.LabelFor(model => model.Telefono)
-                    @Html.TextBoxFor(model => model.Telefono, new { @class = "form-control", id = "txtTelefono" })
+                    @Html.TextBoxFor(model => model.Telefono, new { @class = "form-control", id = "txtTelefono", @onkeypress="return SoloNumeros(event, 'lblErrorTelefono')"})
                     @Html.ValidationMessageFor(model => model.Telefono)
+                    <label id ="lblErrorTelefono"></label>
                 </div>
             </div>
 
@@ -82,16 +86,18 @@
             <div class="col">
                 <div class="col-md-4 col-12 col-sm-6">
                     @Html.LabelFor(model => model.UserName)
-                    @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", id = "txtUserName" })
+                    @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", id = "txtUserName", @onkeypress ="return UserName (event 'lblErrorUsearname')" })
                     @Html.ValidationMessageFor(model => model.UserName)
+                    <label id ="lblErrorUserName"></label>
                 </div>
             </div>
 
             <div class="col">
                 <div class="col-md-4 col-12 col-sm-6">
                     @Html.LabelFor(model => model.Email)
-                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control", id = "txtEmail" })
+                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control", id = "txtEmail"})
                     @Html.ValidationMessageFor(model => model.Email)
+                    <label id ="lblErrorEmail"></label>
                 </div>
             </div>
 
@@ -108,13 +114,16 @@
                     @Html.LabelFor(model => model.FechaNacimiento)
                     @Html.TextBoxFor(model => model.FechaNacimiento, new { @class = "form-control", id = "txtFechaNacimiento" })
                     @Html.ValidationMessageFor(model => model.FechaNacimiento)
+                    
                 </div>
             </div>
 
             <div class="col">
                 <div class="col-md-4 col-12 col-sm-6">
-                    @Html.LabelFor(model => model.Sexo)
-                    @Html.TextBoxFor(model => model.Sexo, new { @class = "form-control", id = "txtSexo" })
+                    Femenino
+                    @Html.RadioButtonFor(model => model.Sexo, "F")
+                    Masculino
+                    @Html.RadioButtonFor(model => model.Sexo, "M")
                     @Html.ValidationMessageFor(model => model.Sexo)
                 </div>
             </div>
@@ -122,42 +131,45 @@
             <div class="col">
                 <div class="col-md-4 col-12 col-sm-6">
                     @Html.LabelFor(model => model.Celular)
-                    @Html.TextBoxFor(model => model.Celular, new { @class = "form-control", id = "txtCelular" })
+                    @Html.TextBoxFor(model => model.Celular, new { @class = "form-control", id = "txtCelular", @onkeypress = "return SoloNumeros (event, 'lblErrorCelular')" })
                     @Html.ValidationMessageFor(model => model.Celular)
+                    <label id="lblErrorCelular"></label>
                 </div>
             </div>
 
             <div class="col">
                 <div class="col-md-4 col-12 col-sm-6">
                     @Html.LabelFor(model => model.CURP)
-                    @Html.TextBoxFor(model => model.CURP, new { @class = "form-control", id = "txtCURP" })
+                    @Html.TextBoxFor(model => model.CURP, new { @class = "form-control", id = "txtCURP", @onblur = "return ValidarCurp (event, 'lblErrorCurp')" })
                     @Html.ValidationMessageFor(model => model.CURP)
+                    <label id ="lblErrorCurp"></label>
                 </div>
             </div>
 
-             <div class="col-md-4">
+            <div class="col-md-4">
                         @Html.LabelFor(model=> model.Imagen)
-        
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1"><i class="bi bi-card-image"></i></span>
-                        <input type='file' class="form-control" name="fuImage" onchange="readURL(this);" />
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-card-image"></i></span>
+                            <input type='file' class="form-control" name="fuImage" onchange="readURL(this);" />
+                        </div>
+                        @if (Model.Imagen != null)
+                        {
+                            <img id="Img" src="data:image/*;base64,Model.Imagen" style="width:auto ; height:100px" />
+                        }
+                        else
+                        {
+                            <img id="Img" src="~/images/ImageUsuario.jpg" style="width:auto ; height:100px" />
+                        }
                     </div>
+                    @Html.HiddenFor(model => model.Imagen)
 
-               @if (Model.Imagen != null)
-                {
-                    <img id="Img" src="data:image/*;base64,Model.Imagen" style="width:auto ; height:100px" />
-                }
-                else
-                {
-                    <img id="Img" src="~/images/ImageUsuario.jpg" style="width:auto ; height:100px" />
-                }
-                </div>
 
             <div class="col">
                 <div class="col-md-4 col-12 col-sm-6">
                     @Html.LabelFor(model => model.Direccion.Calle)
-                    @Html.TextBoxFor(model => model.Direccion.Calle, new { @class = "form-control", id = "txtCalle" })
+                    @Html.TextBoxFor(model => model.Direccion.Calle, new { @class = "form-control", id = "txtCalle", @onkeypress="return SoloLetras (event, 'lblErrorCalle')" })
                     @Html.ValidationMessageFor(model => model.Direccion.Calle)
+                    <label id="lblErrorCalle"></label>
                 </div>
             </div>
 
@@ -181,12 +193,12 @@
                 @Html.LabelFor(model => model.Direccion.Colonia.Municipio.Estado.Pais)
                 @if (Model.Direccion.Colonia.Municipio.Estado.Pais.Paises == null)
                 {
-                @Html.DropDownListFor(model => model.Direccion.Colonia.Municipio.Estado.Pais.IdPais, new SelectList(String.Empty, "Value", "Text"), "Seleciona un pais", new { @class = "form-conrol", @id = "ddlPais" })
+                @Html.DropDownListFor(model => model.Direccion.Colonia.Municipio.Estado.Pais.IdPais, new SelectList(String.Empty, "Value", "Text"), "Seleciona un pais", new { @class = "form-control", @id = "ddlPais" })
                 @Html.ValidationMessageFor(model => model.Direccion.Colonia.Municipio.Estado.Pais.IdPais)
                 }
                 else
                 {
-                @Html.DropDownListFor(model => model.Direccion.Colonia.Municipio.Estado.Pais.IdPais, new SelectList(Model.Direccion.Colonia.Municipio.Estado.Pais.Paises, "IdPais", "Nombre"), "Seleciona un pais", new { @class = "form-conrol", @id="ddlPais" })
+                @Html.DropDownListFor(model => model.Direccion.Colonia.Municipio.Estado.Pais.IdPais, new SelectList(Model.Direccion.Colonia.Municipio.Estado.Pais.Paises, "IdPais", "Nombre"), "Seleciona un pais", new { @class = "form-control", @id="ddlPais" })
                 @Html.ValidationMessageFor(model => model.Direccion.Colonia.Municipio.Estado.Pais.IdPais)
                 }
             </div>
@@ -310,5 +322,64 @@
             });
           });
     });
+
+    //Validaciones
+    function SoloLetras(e, controlId) {
+        var caracter = e.key;
+        if (!/^[a-zA-ZÀ-ÿ\u00f1\u00d1]*$/g.test(caracter)) { 
+        
+            $('#' + controlId).text("Solo se permiten letras");
+            $('#' + controlId).css({ "color": "red" });
+            return false;
+         }
+         else {
+            $('#' + controlId).text("");
+            return true;
+         }
+    }
+
+    function SoloNumeros(e, controlId) {
+        var caracter = e.key;
+        if(!/^[\d]+$/.test(caracter)) {
+
+            $('#' + controlId).text("Solo se permiten números");
+            $('#' + controlId).css({"color" : "red"});
+            return false;
+        }
+        else { 
+            $('#' + controlId).text("");
+            return true;
+        }
+    }
+
+    $('#txtEmail').on('blur',function(cotrolId) {
+        var regex = /[\w-\.]{2,}@@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/;
+
+        if (!regex.test($('#txtEmail').val().trim())) {
+            $('#lblErrorEmail').text("Correo no válido");
+            $('#lblErrorEmail').css({"color":"red"});
+        } 
+        else {
+            $('#lblErrorEmail').text("Correo válido"); 
+            $('#lblErrorEmail').css({"color":"green"});
+        }
+    });
+
+   
+    //var j = jQuery.noConflict();
+    //    j(function () {
+    //        j("#txtFechaNacimiento").datepicker({
+    //            dateFormat: 'mm-dd-yy',
+    //            //showOn: 'button',
+    //            //buttonImage: "../../Img/calendar.png",
+    //            //buttonImageOnly: true,
+    //            changeMonth: true,
+    //            changeYear: true
+    //        });
+    //        $(".ui-datepicker-trigger").css("width", "30px");
+    //        $(".ui-datepicker-trigger").css("height", "30px");
+    //    });
+
+         
 </script>
 }

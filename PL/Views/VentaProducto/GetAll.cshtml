@@ -1,0 +1,35 @@
+﻿@model ML.VentaProducto
+
+@{
+    ViewBag.Title = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>VentaProducto</h2>
+
+<div class ="row">
+    <div class ="col-md-12">
+        <h5>Selecciona un producto</h5> 
+        <hr />
+    </div>
+</div>
+
+<br>
+@foreach (ML.VentaProducto ventaProducto in Model.VentaProductos)
+{
+    <div class="card" style="width: 18rem;">
+                    @if (ventaProducto.Producto.Imagen != null)
+                    {
+                    <img id="Img" src="data:image/*;base64,@ventaProducto.Producto.Imagen" style="width:auto ; height:100px" />
+                    }
+                    else
+                    {
+                    <img id="Img" src="~/images/Image.jpg" style="width:auto ; height:100px" />
+                    }
+  <div class="card-body">
+    <h5 class="card-title">@ventaProducto.Producto.Nombre</h5>
+    <p class="card-text">@ventaProducto.Producto.Descripcion</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+</div>
+}

@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ML", "ML\ML.csproj", "{0791
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PL", "PL\PL.csproj", "{CE603947-4C32-42FC-B672-1A841E044D9B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PL_C", "PL_C\PL_C.csproj", "{198DC535-2CA5-4973-8E44-E72D70AA1E27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SL_WebApi", "SL_WebApi\SL_WebApi.csproj", "{6C0C3BCB-DA7C-43D3-89B7-239C8B2DAE60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{CE603947-4C32-42FC-B672-1A841E044D9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE603947-4C32-42FC-B672-1A841E044D9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE603947-4C32-42FC-B672-1A841E044D9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{198DC535-2CA5-4973-8E44-E72D70AA1E27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{198DC535-2CA5-4973-8E44-E72D70AA1E27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{198DC535-2CA5-4973-8E44-E72D70AA1E27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{198DC535-2CA5-4973-8E44-E72D70AA1E27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C0C3BCB-DA7C-43D3-89B7-239C8B2DAE60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C0C3BCB-DA7C-43D3-89B7-239C8B2DAE60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C0C3BCB-DA7C-43D3-89B7-239C8B2DAE60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C0C3BCB-DA7C-43D3-89B7-239C8B2DAE60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

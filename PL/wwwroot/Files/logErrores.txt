@@ -1,0 +1,18 @@
+No se insertó el nombre: 
+No se insertó el precio unitario: 0
+No se insertó el stock: 0
+No se insertó la descripción: 
+No se insertó el IdProveedor: 0
+No se insertó el IdDepartamento: 0
+No se insertó el nombre: 
+No se insertó el precio unitario: 0
+No se insertó el stock: 0
+No se insertó la descripción: 
+No se insertó el IdProveedor: 0
+No se insertó el IdDepartamento: 0
+No se insertó el nombre: 
+No se insertó el precio unitario: 0
+No se insertó el stock: 0
+No se insertó la descripción: 
+No se insertó el IdProveedor: 0
+No se insertó el IdDepartamento: 0
