@@ -92,7 +92,7 @@ namespace BL
             {
                 using (DL.APozosProgramacionNCapasContext context = new DL.APozosProgramacionNCapasContext())
                 {
-                    var query = context.Productos.FromSqlRaw($"ProductoGetAll '{productoBusqueda.Nombre}'").ToList();
+                    var query = context.Productos.FromSqlRaw($"ProductoGetAll '{productoBusqueda.Departamento.IdDepartamento}'").ToList();
                     result.Objects = new List<object>();
 
                     if (query != null)

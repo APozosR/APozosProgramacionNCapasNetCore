@@ -16,7 +16,7 @@ namespace BL
             {
                 using (DL.APozosProgramacionNCapasContext context = new DL.APozosProgramacionNCapasContext())
                 {
-                    var query = context.VentaProductos.FromSqlRaw($"VentaProductoGetAll").ToList();
+                    var query = context.Productos.FromSqlRaw($"VentaProductoGetAll").ToList();
                     result.Objects = new List<object>();
 
                     if (query != null)
@@ -24,18 +24,10 @@ namespace BL
                         foreach(var obj in query)
                         {
                             ML.VentaProducto ventaProducto= new ML.VentaProducto();
-
-                            ventaProducto.IdVentaProducto = obj.IdVentaProducto;
-
-                            ventaProducto.Venta = new ML.Venta();
-                            ventaProducto.Venta.IdVenta = obj.IdVenta.Value;
-                            ventaProducto.Cantidad = obj.Cantidad;
-
-                            ventaProducto.Producto = new ML.Producto();
-                            ventaProducto.Producto.IdProducto = obj.IdProducto.Value;
-                            //ventaProducto.Producto.Nombre = obj.Nombre;
-                            //ventaProducto.Producto.Descripcion = obj.Descripcion;
-                            //ventaProducto.Producto.Imagen = obj.Imagen; 
+                            ventaProducto.NombreProducto = obj.Nombre;
+                            ventaProducto.Descripcion = obj.Descripcion;
+                            ventaProducto.PrecioUnitario = obj.PrecioUnitario;
+                            ventaProducto.Imagen = obj.Imagen; 
 
                             result.Objects.Add(ventaProducto);
                         }

@@ -15,6 +15,7 @@
 
 @using (Html.BeginForm("GetAll", "Producto", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
+    <div class="row">
     <div class="col-md-4">
         @Html.LabelFor(model => model.Departamento.Area)
         @if (Model.Departamento.Area.Areas == null)
@@ -42,19 +43,14 @@
             @Html.ValidationMessageFor(model => model.Departamento.IdDepartamento)
         }
     </div>
+    </div>
 
     <div class="col">
-        <div class="col-4 col-12 col-sm-6">
-            @Html.LabelFor(model => model.Nombre)
-            @Html.TextBoxFor(model => model.Nombre, new{ @class = "form-control", id = "txtNombre"})
-            @Html.ValidationMessageFor(model => model.Nombre)
+        <div class="col-md-4">
+            <input type="submit" value="Buscar" class="btn-primary btn-success" />
         </div>
     </div>
-    <div class="col">
-                <div class="col-md-3">
-                    <input type="submit" value="Buscar" class="btn-primary btn-success" />
-                </div>
-            </div>
+    
 }
 
 <div style="float:right;">
@@ -62,7 +58,6 @@
 </div>
 
 <br>
-
     <table class="table table-bordered table-responsive">
         <thead>
             <tr>
@@ -92,19 +87,21 @@
                     <td>
                     @if (producto.Imagen != null)
                     {
-                    <img id="Img" src="data:image/*;base64,@producto.Imagen" style="width:auto ; height:100px" />
+                        <img id="Img" src="data:image/*;base64,@producto.Imagen" style="width:auto ; height:100px" />
                     }
                     else
                     {
-                    <img id="Img" src="~/images/Image.jpg" style="width:auto ; height:100px" />
+                        <img id="Img" src="~/Images/Image.jpg" style="width:auto ; height:100px" />
                     }
-                     </td>
+                    </td>
+                    @Html.HiddenFor(model => model.Imagen)
+                    
                     <td>@producto.Departamento.Nombre</td>
                     <td>@producto.Proveedor.Nombre</td>
                     <td><a class="btn btn-danger glyphicon glyphicon-trash" href="@Url.Action("Delete","Producto", new {IdProducto = producto.IdProducto})" onclick="return confirm('¿Seguro que deseas eliminar este producto?');"></a></td>
 
-                </tr>
-            }
+             </tr>
+             }
         </tbody>
     </table>
 
@@ -113,7 +110,7 @@
 <script>
 
     $(document).ready(function () {
-        $("#ddlArea").change(function) () {
+        $("#ddlArea").change(function () {
             $("#ddlDepartamento").empty();
             $.ajax({
                 type: 'GET',
@@ -133,7 +130,7 @@
                 }
             });
         });
-    }
+    });
     </script>
 }
 

@@ -1,4 +1,4 @@
-﻿@model ML.VentaProducto
+﻿@model ML.Producto
 
 @{
     ViewBag.Title = "GetAll";
@@ -9,27 +9,74 @@
 
 <div class ="row">
     <div class ="col-md-12">
-        <h5>Selecciona un producto</h5> 
+        <h5>Selecciona un producto para agregar al carrito</h5> 
         <hr />
     </div>
 </div>
 
+<div class="container mb-5 ">
+            <div class="row">
+                @foreach(ML.Producto producto in Model.Productos)
+                {
+                    <div class="col-md-4">
+                        <div class="card" style="width": 18rem;">
+                            <img src="~/Images/proudcto-producto.jpg" class="card-img-top" alt="...">
+                            <div class="card-body text-center ">
+                                <h5 class="card-title">@producto.Nombre</h5>
+                                <p class="card-text">@producto.PrecioUnitario</p>
+                                <a href="#" class="btn btn-success ">Agregar al carrito</a>
+                            </div>
+                        </div>
+                    </div>                    
+                    <div class="col-md-4">
+                        <div class="card" style="width": 18rem;">
+                            <img src="~/Images/proudcto-producto.jpg" class="card-img-top" alt="...">
+                            <div class="card-body text-center" >
+                               <h5 class="card-title">@producto.Nombre</h5>
+                                <p class="card-text">@producto.PrecioUnitario</p>
+                                <a href="#" class="btn btn-success">Agregar al carrito</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card" style="width": 18rem;">
+                            <img src="~/Images/proudcto-producto.jpg" class="card-img-top" alt="...">
+                            <div class="card-body text-center" >
+                                <h5 class="card-title">@producto.Nombre</h5>
+                                <p class="card-text">@producto.PrecioUnitario</p>
+                                <a href="#" class="btn btn-success">Agregar al carrito</a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />  
+                }
+            </div>
+        </div>
+
+@*
 <br>
 @foreach (ML.VentaProducto ventaProducto in Model.VentaProductos)
 {
-    <div class="card" style="width: 18rem;">
-                    @if (ventaProducto.Producto.Imagen != null)
+  <div class="row">
+  <div class="col">
+    <div class="card h-100">
+      @if (ventaProducto.Imagen != null)
                     {
-                    <img id="Img" src="data:image/*;base64,@ventaProducto.Producto.Imagen" style="width:auto ; height:100px" />
+                        <td><img id="Img" src="data:image/*;base64,@ventaProducto.Imagen" style="width:auto ; height:100px" /></td>
                     }
                     else
                     {
-                    <img id="Img" src="~/images/Image.jpg" style="width:auto ; height:100px" />
+                        <td><img id="Img" src="~/Images/Image.jpg" style="width:auto ; height:100px" /></td>
                     }
-  <div class="card-body">
-    <h5 class="card-title">@ventaProducto.Producto.Nombre</h5>
-    <p class="card-text">@ventaProducto.Producto.Descripcion</p>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    @Html.HiddenFor(model => model.Imagen)
+      <div class="card-body">
+        <h4 class="card-title">@ventaProducto.NombreProducto</h4>
+        <h6 class="card-subtitle">@ventaProducto.PrecioUnitario</h6>
+        <p class="card-text">@ventaProducto.Descripcion</p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>    
+      </div>
+    </div>
   </div>
-</div>
-}
+ 
+  </div>
+}*@

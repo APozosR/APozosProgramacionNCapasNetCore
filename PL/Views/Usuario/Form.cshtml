@@ -39,7 +39,8 @@
             </div>
             </div>
 
-            <div class="col">
+            <div class="row"> 
+            <div class="col-md-3">
                 <div class="col-md-4 col-12 col-sm-6">
                     @Html.LabelFor(model => model.Nombre)
                     @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", id = "txtnombre", @onkeypress ="return SoloLetras(event, 'lblErrorNombre')" })
@@ -48,7 +49,7 @@
                 </div>
             </div>
 
-            <div class="col">
+            <div class="col-md-3">
                 <div class="col-md-4 col-12 col-sm-6">
                     @Html.LabelFor(model => model.ApellidoPaterno)
                     @Html.TextBoxFor(model => model.ApellidoPaterno, new { @class = "form-control", id = "txtApellidoPaterno", @onkeypress ="return SoloLetras (event, 'lblErrorApellidoPaterno')" })
@@ -57,13 +58,14 @@
                 </div>
             </div>
 
-            <div class="col">
+            <div class="col-md-3">
                 <div class="col-md-4 col-12 col-sm-6">
                     @Html.LabelFor(model => model.ApellidoMaterno)
                     @Html.TextBoxFor(model => model.ApellidoMaterno, new { @class = "form-control", id = "txtApellidoMaterno", @onkeypress ="return SoloLetras(event, 'lblErrorApellidoMaterno')" })
                     @Html.ValidationMessageFor(model => model.ApellidoMaterno)
                     <label id = "lblErrorApellidoMaterno"></label>
                 </div>
+            </div>
             </div>
 
             <div class="col">
@@ -158,11 +160,10 @@
                         }
                         else
                         {
-                            <img id="Img" src="~/images/ImageUsuario.jpg" style="width:auto ; height:100px" />
+                            <img id="Img" src="~/Images/ImageUsuario.jpg" style="width:auto ; height:100px" />
                         }
-                    </div>
-                    @Html.HiddenFor(model => model.Imagen)
-
+            </div>
+            @Html.HiddenFor(model => model.Imagen)
 
             <div class="col">
                 <div class="col-md-4 col-12 col-sm-6">
@@ -241,7 +242,7 @@
                 else
                 {
                 @Html.DropDownListFor(model => model.Direccion.Colonia.IdColonia, new SelectList(Model.Direccion.Colonia.Colonias, "IdColonia", "Nombre"), "Selecciona la colonia donde vives", new { @class = "form-control", @id="ddlColonia"})
-                @Html.ValidationMessageFor(model => model.Direccion.NumeroExterior)
+                @Html.ValidationMessageFor(model => model.Direccion.Colonia.IdColonia)
                 }
             </div>
 
@@ -322,6 +323,17 @@
             });
           });
     });
+
+            function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#Img')
+                  .attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 
     //Validaciones
     function SoloLetras(e, controlId) {

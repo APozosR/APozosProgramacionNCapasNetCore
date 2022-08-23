@@ -12,12 +12,8 @@ namespace PL_MVC.Controllers
             producto.Departamento.Area = new ML.Area();
 
             ML.Result resultArea = BL.Area.GetAllArea();
-            //ML.Result resultDepartamento = BL.Departamento.GetByIdArea();
             producto.Departamento.Area.Areas = resultArea.Objects;
-            //producto.Departamento.Departamentos = resultDepartamento.Objects;
-            
-        
-            producto.Nombre = (producto.Nombre == null) ? "" : producto.Nombre;
+            producto.Departamento.IdDepartamento = (producto.Departamento.IdDepartamento == 0) ? 0 : producto.Departamento.IdDepartamento;
 
             ML.Result result = BL.Producto.GetAll(producto);
 
@@ -35,7 +31,10 @@ namespace PL_MVC.Controllers
         [HttpPost]
         public ActionResult GetAll(ML.Producto producto)
         {
-            producto.Nombre = (producto.Nombre == null) ? "" : producto.Nombre;
+            producto.Departamento.Area = new ML.Area();
+            ML.Result resultArea = BL.Area.GetAllArea();
+            producto.Departamento.Area.Areas = resultArea.Objects;
+            producto.Departamento.IdDepartamento = (producto.Departamento.IdDepartamento == 0) ? 0 : producto.Departamento.IdDepartamento;
 
             ML.Result result = BL.Producto.GetAll(producto);
             if (result.Correct)
@@ -46,16 +45,16 @@ namespace PL_MVC.Controllers
             {
                 result.Correct = false;
             }
-            return View(producto);
+                return View(producto);
+            
         }
-
         [HttpGet]
         public ActionResult Form(int? IdProducto)
         {
             ML.Producto producto = new ML.Producto();
             producto.Proveedor = new ML.Proveedor();
             producto.Departamento = new ML.Departamento();
-                
+
             ML.Result resultProveedor = BL.Proveedor.GetAllProveedor();
             ML.Result resultDepartamento = BL.Departamento.GetAllDepartamento();
 
@@ -147,7 +146,7 @@ namespace PL_MVC.Controllers
             }
             return View("Modal");
         }
-        public static byte[] ConvertToBytes (IFormFile imagen)
+        public static byte[] ConvertToBytes(IFormFile imagen)
         {
             using var fileStream = imagen.OpenReadStream();
 

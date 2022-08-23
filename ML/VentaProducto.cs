@@ -17,6 +17,7 @@ namespace ML
         //SP
         public string NombreProducto { get; set; }
         public string Descripcion { get; set; }
+        public decimal PrecioUnitario { get; set; }
         public string Imagen { get; set; }
 
     }
