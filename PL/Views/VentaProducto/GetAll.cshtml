@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>VentaProducto</h2>
+<h2>Producto</h2>
 
 <div class ="row">
     <div class ="col-md-12">
@@ -14,69 +14,95 @@
     </div>
 </div>
 
-<div class="container mb-5 ">
-            <div class="row">
-                @foreach(ML.Producto producto in Model.Productos)
-                {
-                    <div class="col-md-4">
-                        <div class="card" style="width": 18rem;">
-                            <img src="~/Images/proudcto-producto.jpg" class="card-img-top" alt="...">
-                            <div class="card-body text-center ">
-                                <h5 class="card-title">@producto.Nombre</h5>
-                                <p class="card-text">@producto.PrecioUnitario</p>
-                                <a href="#" class="btn btn-success ">Agregar al carrito</a>
-                            </div>
-                        </div>
-                    </div>                    
-                    <div class="col-md-4">
-                        <div class="card" style="width": 18rem;">
-                            <img src="~/Images/proudcto-producto.jpg" class="card-img-top" alt="...">
-                            <div class="card-body text-center" >
-                               <h5 class="card-title">@producto.Nombre</h5>
-                                <p class="card-text">@producto.PrecioUnitario</p>
-                                <a href="#" class="btn btn-success">Agregar al carrito</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card" style="width": 18rem;">
-                            <img src="~/Images/proudcto-producto.jpg" class="card-img-top" alt="...">
-                            <div class="card-body text-center" >
-                                <h5 class="card-title">@producto.Nombre</h5>
-                                <p class="card-text">@producto.PrecioUnitario</p>
-                                <a href="#" class="btn btn-success">Agregar al carrito</a>
-                            </div>
-                        </div>
-                    </div>
-                    <hr />  
-                }
+@using (Html.BeginForm("GetAll", "VentaProducto", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="row">
+    <div class="col-md-4">
+        @Html.LabelFor(model => model.Departamento.Area)
+        @if (Model.Departamento.Area.Areas == null)
+        {
+            @Html.DropDownListFor(model => model.Departamento.Area.IdArea, new SelectList(String.Empty, "Value", "Text"), "Seleciona una área", new { @class = "form-control", @id = "ddlArea" })
+            @Html.ValidationMessageFor(model => model.Departamento.Area.IdArea)
+        }
+        else
+        {
+            @Html.DropDownListFor(model => model.Departamento.Area.IdArea, new SelectList (Model.Departamento.Area.Areas, "IdArea", "Nombre"), "Seleciona una área", new { @class = "form-control", @id="ddlArea" })
+            @Html.ValidationMessageFor(model => model.Departamento.Area.IdArea)
+        }
+    </div>
+
+    <div class="col-md-4">
+        @Html.LabelFor(model=>model.Departamento)
+        @if (Model.Departamento.Departamentos == null)
+        {
+            @Html.DropDownListFor(model => model.Departamento.IdDepartamento, new SelectList (String.Empty, "Value","Text"), "Selecciona un departamento", new {@class="form-control", @id = "ddlDepartamento"})
+            @Html.ValidationMessageFor(model => model.Departamento.IdDepartamento)
+        }
+        else
+        {
+            @Html.DropDownListFor(model => model.Departamento.IdDepartamento, new SelectList (Model.Departamento.Departamentos, "IdDepartamento","Nombre"), "Selecciona un departamento", new {@class = "form-control", @id="ddlDepartamento"})
+            @Html.ValidationMessageFor(model => model.Departamento.IdDepartamento)
+        }
+    </div>
+    </div>
+
+    <div class="col">
+        <div class="col-md-4">
+            <input type="submit" value="Buscar" class="btn-primary btn-success" />
+        </div>
+    </div>
+    
+}
+
+<div class = "row">
+    @foreach (ML.Producto producto in Model.Productos)
+    {
+        <div class="col mt-3 pt-3">
+            <div class="card" style="width: 18rem;">
+             @if (producto.Imagen != null)
+             {
+                <img id="Img" src="data:image/*;base64,@producto.Imagen" style="width:auto ; height:100px" />
+             }
+             else
+             {
+                <img id="Img" src="~/Images/Image.jpg" style="width:auto ; height:100px" />
+             }
+                <div class="card-body">
+                    <h5 class="card-title  text-center " id="ProductoNombre">@producto.Nombre</h5>
+                    <p class="card-text" id="ProductoPrecioUnitario">Precio: $@producto.PrecioUnitario</p>
+                    <p class="card-text" id=ProductoDescripcion>Descripción: @producto.Descripcion</p>
+                    <a href="@Url.Action("CarritoPost", "VentaProducto", new{IdProducto = producto.IdProducto, Nombre = producto.Nombre, Precio = producto.PrecioUnitario, Descripcion=producto.Descripcion})" class="btn btn-success">Añadir <i class="bi bi-cart3" style="color: khaki"></i> </a>
+                </div>     
             </div>
         </div>
+    }
+</div>
 
-@*
-<br>
-@foreach (ML.VentaProducto ventaProducto in Model.VentaProductos)
+@section scripts
 {
-  <div class="row">
-  <div class="col">
-    <div class="card h-100">
-      @if (ventaProducto.Imagen != null)
-                    {
-                        <td><img id="Img" src="data:image/*;base64,@ventaProducto.Imagen" style="width:auto ; height:100px" /></td>
-                    }
-                    else
-                    {
-                        <td><img id="Img" src="~/Images/Image.jpg" style="width:auto ; height:100px" /></td>
-                    }
-                    @Html.HiddenFor(model => model.Imagen)
-      <div class="card-body">
-        <h4 class="card-title">@ventaProducto.NombreProducto</h4>
-        <h6 class="card-subtitle">@ventaProducto.PrecioUnitario</h6>
-        <p class="card-text">@ventaProducto.Descripcion</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>    
-      </div>
-    </div>
-  </div>
- 
-  </div>
-}*@
+<script>
+
+    $(document).ready(function () {
+        $("#ddlArea").change(function () {
+            $("#ddlDepartamento").empty();
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("DepartamentoGetByIdArea")',
+                dataType: 'json',
+                data: {IdArea: $("#ddlArea").val() },
+                success: function (departamentos){
+                    $("#ddlDepartamento").append('<option value="0">' + 'Seleccione una opción' + '</option>');
+                    $.each(departamentos, function (i, departamentos) {
+                        $("#ddlDepartamento").append('<option value="'
+                            + departamentos.idDepartamento + '">'
+                            + departamentos.nombre + '</option>');
+                    });
+                },
+                error: function (ex){
+                    alert('Failed.' + ex);
+                }
+            });
+        });
+    });
+    </script>
+}

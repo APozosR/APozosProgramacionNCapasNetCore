@@ -234,5 +234,49 @@ namespace BL
             }
             return result;
         }
+
+        public static ML.Result GetByEmail(string Email)
+        {
+            ML.Result result = new ML.Result();
+            try
+            {
+                using (DL.APozosProgramacionNCapasContext context = new DL.APozosProgramacionNCapasContext())
+                {
+                    var query = context.Usuarios.FromSqlRaw($"UsuarioGetByEmail '{Email}'").AsEnumerable().FirstOrDefault();
+
+                    if (query != null)
+                    {
+                        ML.Usuario usuario = new ML.Usuario();
+
+                        usuario.Nombre = query.Nombre;
+                        usuario.ApellidoPaterno = query.ApellidoPaterno;
+                        usuario.ApellidoMaterno = query.ApellidoMaterno;
+                        usuario.Telefono = query.Telefono;
+                        usuario.Rol = new ML.Rol();
+                        usuario.Rol.IdRol = query.IdRol.Value;
+                        usuario.UserName = query.UserName;
+                        usuario.Email = query.Email;
+                        usuario.Password = query.Password;
+                        usuario.Sexo = query.Sexo;
+                        usuario.Celular = query.Celular;
+                        usuario.CURP = query.Curp;
+                        usuario.Imagen = query.Imagen;
+                        usuario.Status = query.Status;
+
+                        result.Object = usuario;
+                        result.Correct = true;
+                    }
+                    else
+                    {
+                        result.Correct = false;
+                    }
+                }
+            } catch (Exception ex)
+            {
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
+            }
+            return result;
+        }
     }
 }

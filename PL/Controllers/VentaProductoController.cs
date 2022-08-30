@@ -9,6 +9,12 @@ namespace PL.Controllers
         {
             ML.Producto producto = new ML.Producto();
             producto.Departamento = new ML.Departamento();
+            producto.Departamento.Area = new ML.Area();
+
+            ML.Result resultArea = BL.Area.GetAllArea();
+            producto.Departamento.Area.Areas = resultArea.Objects;
+            producto.Departamento.IdDepartamento = (producto.Departamento.IdDepartamento == 0) ? 0 : producto.Departamento.IdDepartamento;
+
             ML.Result result = BL.Producto.GetAll(producto);
 
             if (result.Correct)
@@ -24,23 +30,43 @@ namespace PL.Controllers
         }
 
         [HttpPost]
+        public ActionResult GetAll(ML.Producto producto)
+        {
+            producto.Departamento.Area = new ML.Area();
+            ML.Result resultArea = BL.Area.GetAllArea();
+            producto.Departamento.Area.Areas = resultArea.Objects;
+            producto.Departamento.IdDepartamento = (producto.Departamento.IdDepartamento == 0) ? 0 : producto.Departamento.IdDepartamento;
+
+            ML.Result result = BL.Producto.GetAll(producto);
+            if (result.Correct)
+            {
+                producto.Productos = result.Objects;
+            }
+            else
+            {
+                result.Correct = false;
+            }
+            return View(producto);
+        }
+
+        [HttpPost]
         public ActionResult Carrito()
         {
             return View();
         }
 
         [HttpGet]
-        public ActionResult CarritoPost(ML.Producto producto)
+        public ActionResult CarritoPost(ML.Producto producto)  //METODO QUE VA LLAMAR EL BOTON DE AGREGAR
         {
             ML.VentaProducto ventaProducto = new ML.VentaProducto();
             ventaProducto.VentaProductos = new List<object>();
 
             if (HttpContext.Session.GetString("Producto") == null)
             {
-                ventaProducto.Cantidad = ventaProducto.Cantidad = 1;
+                producto.Stock = producto.Stock = 1;
                 ventaProducto.VentaProductos.Add(producto);
                 HttpContext.Session.SetString("Producto", Newtonsoft.Json.JsonConvert.SerializeObject(ventaProducto.VentaProductos));
-                var session = HttpContext.Session.GetString("Producto");
+                
             }
             else
             {
@@ -53,15 +79,16 @@ namespace PL.Controllers
                     ventaProducto.VentaProductos.Add(objProducto);
                 }
 
-                foreach (ML.Producto venta in ventaProducto.VentaProductos.ToList())
+                foreach (ML.Producto venta in ventaProducto.VentaProductos.ToList()) //VALIDAR SI no esta en la lista
                 {
                     if (producto.IdProducto == venta.IdProducto)
                     {
-                        ventaProducto.Cantidad = ventaProducto.Cantidad + 1;
+                        venta.Stock = venta.Stock + 1;
                     }
+
                     else
                     {
-                        ventaProducto.Cantidad = ventaProducto.Cantidad = 1;
+                        producto.Stock = producto.Stock = 1;
                         ventaProducto.VentaProductos.Add(producto);
                     }
                 }
@@ -80,7 +107,7 @@ namespace PL.Controllers
 
         [HttpGet]
 
-        public ActionResult ResumenCompra (ML.VentaProducto ventaProducto)
+        public ActionResult ResumenCompra (ML.VentaProducto ventaProducto) //VER CARRITo TABLE
         {
             if (HttpContext.Session.GetString("Producto") == null)
             {
@@ -99,6 +126,11 @@ namespace PL.Controllers
                 }
             }
             return View(ventaProducto);
+        }
+        public JsonResult DepartamentoGetByIdArea(int IdArea)
+        {
+            ML.Result result = BL.Departamento.GetByIdArea(IdArea);
+            return Json(result.Objects);
         }
     }
 }

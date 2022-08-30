@@ -1,0 +1,59 @@
+﻿@model ML.Departamento
+@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Form</h2>
+<div class="row">
+    <div class="container">
+        <div class="col-md-12">
+            <h2>Departamento</h2>
+            <h5>Ingresa los datos</h5>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Form", "Departamento", FormMethod.Post, new {enctype = "multipart/form-data"}))
+        {
+                <div class="hidden">
+                    <div class="col-md-4 col-12 col-sm-6" style = "display: none;">
+                    @Html.LabelFor(model => model.IdDepartamento)
+                    @Html.TextBoxFor(model => model.IdDepartamento, new {@class="form-control", id="txtIdDepartamento"})
+                    @Html.ValidationMessageFor(model => model.IdDepartamento)
+                </div>
+                </div>
+
+                <div class="col">
+                    <div class="col-md-4 col-12 col-sm-6">
+                        @Html.LabelFor(model => model.Nombre)
+                        @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", id = "txtNombre" })
+                        @Html.ValidationMessageFor(model => model.Nombre)
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="col-md-4 col-12 col-sm-6">
+                        @Html.LabelFor(model => model.Area.IdArea)
+                        @Html.TextBoxFor(model => model.Area.IdArea, new { @class = "form-conrol", id = "TxtIdArea" })
+                        @Html.ValidationMessageFor(model => model.Area.IdArea)
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="col-md-3">
+                        <input type="submit" value="Guardar" class="btn btnsucces" />
+                        @Html.ActionLink("Regresar", "GetAll", "Departamento", htmlAttributes: new { @class = "btn btn-danger" })
+                    </div>
+                </div>
+            }
+    </div>
+</div>

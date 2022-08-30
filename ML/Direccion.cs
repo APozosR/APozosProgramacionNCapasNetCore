@@ -10,15 +10,15 @@ namespace ML
     public class Direccion
     {
         public int IdDireccion { get; set; }
-        public string Calle { get; set; }
+        public string? Calle { get; set; }
 
         [Range(1,999)]
         [Display(Name = "Número interior")]
-        public string NumeroInterior { get; set; }
+        public string? NumeroInterior { get; set; }
 
         [Range(1,999)]
         [Display(Name = "Número exterior")]
-        public string NumeroExterior { get; set; }
+        public string? NumeroExterior { get; set; }
         public ML.Colonia Colonia { get; set; }
         public ML.Usuario Usuario { get; set; }
     }

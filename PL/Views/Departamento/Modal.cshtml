@@ -14,13 +14,10 @@
                 </button>
             </div>
             <div class="modal-body">
-                <h5>@ViewBag.MensajeVentaProducto</h5>
+                <h5>@ViewBag.MensajeDepartamento</h5>
             </div>
             <div class="modal-footer">
-                @Html.ActionLink("Seguir comprando", "GetAll", "VentaProducto", htmlAttributes: new { @class = "btn btn-danger" })
-            </div>
-            <div class="modal-footer">
-                @Html.ActionLink("Ver carrito", "ResumenCompra", "VentaProducto", htmlAttributes: new { @class = "btn btn-danger" })
+                @Html.ActionLink("Regresar", "GetAll", "Departamento", htmlAttributes: new { @class = "btn btn-danger" })
             </div>
         </div>
     </div>

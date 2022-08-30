@@ -45,8 +45,7 @@ namespace PL_MVC.Controllers
             {
                 result.Correct = false;
             }
-                return View(producto);
-            
+                return View(producto);  
         }
         [HttpGet]
         public ActionResult Form(int? IdProducto)

@@ -114,7 +114,7 @@
             <div class="col">
                 <div class="col-md-4 col-12 col-sm-6">
                     @Html.LabelFor(model => model.FechaNacimiento)
-                    @Html.TextBoxFor(model => model.FechaNacimiento, new { @class = "form-control", id = "txtFechaNacimiento" })
+                    @Html.TextBoxFor(model => model.FechaNacimiento, new { @class = "date", id = "txtFechaNacimiento" })
                     @Html.ValidationMessageFor(model => model.FechaNacimiento)
                     
                 </div>

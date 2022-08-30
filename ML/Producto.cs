@@ -11,6 +11,7 @@
         public ML.Proveedor Proveedor { get; set; }
         public ML.Departamento Departamento { get; set; }
         public ML.Area Area { get; set; }
+        public ML.VentaProducto VentaProducto { get; set; }
         public List<object> Productos { get; set; }
 
 
